@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  backend:
+    build: ./backend
+    container_name: apim-backend
+    env_file: .env
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_INTERNAL_PORT}"
+    environment:
+      BACKEND_INTERNAL_PORT: ${BACKEND_INTERNAL_PORT}
+    restart: unless-stopped
+  frontend:
+    build: ./frontend
+    container_name: apim-frontend
+    env_file: .env
+    ports:
+      - "${FRONTEND_PORT}:5173"
+    environment:
+      VITE_BACKEND_URL: ${BACKEND_URL}
+    depends_on:
+      - backend
+    restart: unless-stopped
